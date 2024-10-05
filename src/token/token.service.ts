@@ -9,13 +9,11 @@ export class TokenService {
   constructor(@InjectModel(Token.name) private tokenModel: Model<Token>) {}
 
   async createToken(userId: string, token: string) {
-    const newToken = new this.tokenModel(
-      {
-        userId,
-        token,
-        createdAt: new Date(),
-      }
-    );
+    const newToken = new this.tokenModel({
+      userId,
+      token,
+      createdAt: new Date(),
+    });
     return newToken.save();
   }
 

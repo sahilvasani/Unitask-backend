@@ -5,7 +5,7 @@ import { User } from './user.schema';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { TokenService } from '../token/token.service';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, LoginUserDto } from './user.dto';
 
 @Injectable()
 export class UsersService {
@@ -16,12 +16,6 @@ export class UsersService {
   ) {}
 
   async create(body: CreateUserDto) {
-    if (!body.email) {
-      throw new HttpException('Email is required', HttpStatus.BAD_REQUEST);
-    } else if (!body.password) {
-      throw new HttpException('Password is required', HttpStatus.BAD_REQUEST);
-    }
-
     const validateEmail = await this.findByEmail(body.email);
     if (validateEmail) {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
@@ -47,7 +41,7 @@ export class UsersService {
     return { user: user.email, token: saveTokenInDb._id };
   }
 
-  async login(body: CreateUserDto) {
+  async login(body: LoginUserDto) {
     const user = await this.userModel.findOne({ email: body.email });
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -93,5 +87,18 @@ export class UsersService {
     });
 
     return !!user;
+  }
+
+  async getProfile(req: any) {
+    const user = await this.userModel.findOne({ _id: req.userId });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    };
   }
 }

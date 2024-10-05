@@ -10,7 +10,7 @@ export class Token extends Document {
   @Prop({ required: true })
   token: string;
 
-  @Prop({ required: true, expires: '1h' }) // Optional: Set token expiration
+  @Prop({ required: true, expires: '8h' }) 
   createdAt: Date;
 }
 

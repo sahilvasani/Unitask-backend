@@ -4,12 +4,11 @@ import {
   Body,
   Request,
   UseGuards,
-  HttpException,
-  HttpStatus,
+  Get,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtGuard } from './jwt.guard';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, LoginUserDto } from './user.dto';
 import { errorResponse, sucessResponse } from 'src/common/response';
 
 @Controller('users')
@@ -27,7 +26,7 @@ export class UsersController {
   }
 
   @Post('login')
-  async login(@Body() body) {
+  async login(@Body() body: LoginUserDto) {
     try {
       const data = await this.usersService.login(body);
       return sucessResponse('User logged in successfully', data);
@@ -43,6 +42,17 @@ export class UsersController {
     try {
       const data = await this.usersService.logout(tokenId);
       return sucessResponse('User logged out successfully', null);
+    } catch (error) {
+      return errorResponse(error);
+    }
+  }
+
+  @UseGuards(JwtGuard)
+  @Get('me')
+  async me(@Request() req) {
+    try {
+      const data = await this.usersService.getProfile(req);
+      return sucessResponse('User details', data);
     } catch (error) {
       return errorResponse(error);
     }
