@@ -34,7 +34,10 @@ export class UsersService {
 
     // generate token and save it to the database
 
-    const token = this.jwtService.sign({ userId: user._id });
+    const token = this.jwtService.sign(
+      { userId: user._id },
+      { expiresIn: '8h' },
+    );
 
     const saveTokenInDb = await this.tokenService.createToken(
       user._id.toString(),
@@ -55,7 +58,10 @@ export class UsersService {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
 
-    const token = this.jwtService.sign({ userId: user._id });
+    const token = this.jwtService.sign(
+      { userId: user._id },
+      { expiresIn: '8h' },
+    );
     const saveTokenTodb = await this.tokenService.createToken(
       user._id.toString(),
       token,
@@ -77,12 +83,8 @@ export class UsersService {
   }
 
   async logout(tokenId: string) {
-    try {
-      await this.tokenService.deleteToken(tokenId);
-      return { message: 'Token removed successfully' };
-    } catch (error) {
-      throw new HttpException('Error logging out', HttpStatus.BAD_REQUEST);
-    }
+    await this.tokenService.deleteToken(tokenId);
+    return true;
   }
 
   async findByEmail(email: string) {

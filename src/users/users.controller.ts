@@ -35,4 +35,16 @@ export class UsersController {
       return errorResponse(error);
     }
   }
+
+  @UseGuards(JwtGuard)
+  @Post('logout')
+  async logout(@Request() req) {
+    const tokenId = req.headers['x-token']; // Pass token ID in headers
+    try {
+      const data = await this.usersService.logout(tokenId);
+      return sucessResponse('User logged out successfully', null);
+    } catch (error) {
+      return errorResponse(error);
+    }
+  }
 }
