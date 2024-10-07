@@ -1,4 +1,4 @@
-# Chuck Norris API
+# Unitask Backend Test
 
 This project implements a REST API using NestJS with TypeScript, featuring user authentication, profile management, and a random joke endpoint.
 
