@@ -56,5 +56,4 @@ To test the API endpoints, you can use Postman or any other API testing tool. Cr
 
 ## Additional Notes
 
-- This project uses SQLite as the database for simplicity. For production use, consider using a more robust database solution.
 - Make sure to replace the JWT secret in the `.env` file with a secure, randomly generated string in a production environment.
